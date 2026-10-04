@@ -49,17 +49,31 @@ Or skip installing entirely and run `./bin/omacellar` in place.
 <summary>Uninstall</summary>
 
 ```bash
-sudo ./uninstall.sh              # remove the program, ask about your cellar
-sudo ./uninstall.sh --keep-data  # remove the program, keep ~/.omacellar
-sudo ./uninstall.sh --purge      # remove the program and ~/.omacellar
+curl -fsSL https://raw.githubusercontent.com/noxthedevwindev-greatest/omacellar/main/uninstall.sh | sudo bash -s --
 ```
 
 It removes the binary, its libraries, the completions and the docs, then asks
-what to do with `~/.omacellar`. That directory is several gigabytes of runners
-and prefixes, so it is never deleted without you saying so: `--keep-data`
-skips the question and keeps it, `--purge` skips the question and deletes it.
+what to do with `~/.omacellar`. That directory is gigabytes of runners and
+prefixes, so it is never deleted without you saying so:
 
-Running it without `sudo` is fine if you installed to a `PREFIX` you own. It
+```bash
+# keep it, and say so up front instead of being asked
+curl -fsSL .../uninstall.sh | sudo bash -s -- --keep-data
+
+# delete it without being asked
+curl -fsSL .../uninstall.sh | sudo bash -s -- --purge
+```
+
+From a checkout it is the same script with no pipe:
+
+```bash
+sudo ./uninstall.sh --purge
+```
+
+The `bash -s --` is required when piping: `bash` reads the script from stdin,
+and `-s --` is what lets the arguments after it reach the script.
+
+Running without `sudo` is fine if you installed to a `PREFIX` you own. It
 reports what it could not remove and tells you to re-run with `sudo`.
 
 </details>
