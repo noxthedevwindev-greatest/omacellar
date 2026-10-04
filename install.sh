@@ -10,6 +10,7 @@
 set -euo pipefail
 
 REPO=noxthedevwindev-greatest/omacellar
+NAME=${REPO##*/}
 REF=main
 PREFIX=${PREFIX:-/usr}
 REPO_URL=https://github.com/$REPO
@@ -30,8 +31,8 @@ step "fetching $REPO@$REF"
 curl -fsSL "$REPO_URL/archive/refs/heads/$REF.tar.gz" -o "$tmp/src.tar.gz" \
   || die "could not download $REPO_URL/archive/refs/heads/$REF.tar.gz"
 tar -xzf "$tmp/src.tar.gz" -C "$tmp"
-src=$(find "$tmp" -maxdepth 1 -type d -name "$REPO-*" | head -n1)
-[[ -n $src ]] || die "the archive did not contain $REPO"
+src=$(find "$tmp" -maxdepth 1 -type d -name "$NAME-*" | head -n1)
+[[ -n $src ]] || die "the archive did not contain a $NAME directory"
 [[ -f $src/bin/omacellar ]] || die "no bin/omacellar in the archive"
 
 step "installing to $PREFIX"
