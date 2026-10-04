@@ -45,6 +45,25 @@ Or skip installing entirely and run `./bin/omacellar` in place.
 
 </details>
 
+<details>
+<summary>Uninstall</summary>
+
+```bash
+sudo ./uninstall.sh              # remove the program, ask about your cellar
+sudo ./uninstall.sh --keep-data  # remove the program, keep ~/.omacellar
+sudo ./uninstall.sh --purge      # remove the program and ~/.omacellar
+```
+
+It removes the binary, its libraries, the completions and the docs, then asks
+what to do with `~/.omacellar`. That directory is several gigabytes of runners
+and prefixes, so it is never deleted without you saying so: `--keep-data`
+skips the question and keeps it, `--purge` skips the question and deletes it.
+
+Running it without `sudo` is fine if you installed to a `PREFIX` you own. It
+reports what it could not remove and tells you to re-run with `sudo`.
+
+</details>
+
 Arch users: an `omarchy/PKGBUILD` is in the repo and is shaped for submission
 to `pkgs.omarchy.org`.
 
