@@ -2,14 +2,14 @@
 #
 # omacellar installer
 #
-#   curl -fsSL https://raw.githubusercontent.com/noxthedev/omacellar/main/install.sh | sudo bash
+#   curl -fsSL https://raw.githubusercontent.com/noxthedevwindev-greatest/omacellar/main/install.sh | sudo bash
 #
 # Installs the binary, its libraries and shell completions. Touches nothing in
 # your home directory: the cellar at ~/.omacellar is created on first run.
 
 set -euo pipefail
 
-REPO=noxthedev/omacellar
+REPO=noxthedevwindev-greatest/omacellar
 REF=main
 PREFIX=${PREFIX:-/usr}
 REPO_URL=https://github.com/$REPO

@@ -64,7 +64,7 @@ silent 404.
 ### curl
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/noxthedev/omacellar/main/install.sh | sudo bash
+curl -fsSL https://raw.githubusercontent.com/noxthedevwindev-greatest/omacellar/main/install.sh | sudo bash
 ```
 
 That drops `omacellar` in `/usr/bin`, its libraries in
@@ -77,7 +77,7 @@ Nothing is written to your home directory at install time. The cellar at
 ### From a checkout
 
 ```bash
-git clone https://github.com/noxthedev/omacellar
+git clone https://github.com/noxthedevwindev-greatest/omacellar
 sudo install -Dm755 omacellar/bin/omacellar /usr/bin/omacellar
 sudo install -d /usr/share/omacellar/lib /usr/share/omacellar/registry
 sudo install -m644 omacellar/lib/*.sh /usr/share/omacellar/lib/
