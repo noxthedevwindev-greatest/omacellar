@@ -1,0 +1,118 @@
+#compdef omacellar
+# zsh completion for omacellar
+# Install with: omacellar completions zsh > "${fpath[1]}/_omacellar"
+
+_omacellar_runners() {
+  local -a names
+  names=(${(f)"$(omacellar runner list --installed 2>/dev/null | awk 'NR > 2 && ($1 == "ok" || $1 == "broken") { print $2 }')"})
+  _describe 'runner' names
+}
+
+_omacellar_prefixes() {
+  local -a names
+  names=(${(f)"$(omacellar prefix list 2>/dev/null | awk 'NR > 2 && ($1 == "ok" || $1 == "broken") { print $2 }')"})
+  _describe 'installation' names
+}
+
+_omacellar_registry_ids() {
+  local -a ids
+  ids=(${(f)"$(omacellar runner list --available --all 2>/dev/null | awk 'NR > 1 && $1 != "ID" { print $1 }')"})
+  _describe 'runner id' ids
+}
+
+_omacellar() {
+  local -a commands runner_commands prefix_commands
+  commands=(
+    'runner:manage runners'
+    'prefix:manage installations'
+    'status:one screen summary'
+    'about:who made this'
+    'doctor:check the machine'
+    'migrate:adopt a cellar from an older layout'
+    'config:read and write configuration'
+    'completions:print shell completions'
+    'help:show help'
+    'version:print the version'
+  )
+  runner_commands=(
+    'list:list runners'
+    'search:find runners'
+    'info:show one runner'
+    'available:list published versions'
+    'add:download and install a runner'
+    'remove:uninstall a runner'
+    'update:fetch newer builds'
+    'link:adopt a directory on disk'
+    'unlink:forget a linked runner'
+    'adopt:register untracked directories'
+    'path:print an install path'
+    'steam:register with Steam'
+    'unsteam:remove that registration'
+    'exec:run a command inside a runner'
+    'old:list versions kept in Old/'
+    'activate:switch which version is active'
+  )
+  prefix_commands=(
+    'list:list installations'
+    'create:create an installation'
+    'remove:delete an installation'
+    'info:show one installation'
+    'path:print an installation path'
+    'run:run a program'
+    'shell:open a terminal in the environment'
+    'winetricks:run winetricks'
+    'env:print shell exports'
+  )
+
+  _arguments -C \
+    '--json[machine readable output]' \
+    '1: :->command' \
+    '2: :->subcommand' \
+    '*:: :->args'
+
+  case $state in
+    command)
+      _describe -t commands 'omacellar command' commands
+      _values 'alias' runners r prefix prefixes p
+      ;;
+    subcommand)
+      case $words[1] in
+        runner | runners | r) _describe -t commands 'runner subcommand' runner_commands ;;
+        prefix | prefixes | p) _describe -t commands 'prefix subcommand' prefix_commands ;;
+        completions) _values 'shell' bash zsh fish ;;
+        config) _values 'action' list get set unset path ;;
+      esac
+      ;;
+    args)
+      case $words[1]:$words[2] in
+        runner:add | runner:available)
+          _omacellar_registry_ids
+          ;;
+        runner:activate)
+          _values 'runner id and version' soda caffe protosoda
+          ;;
+        runner:remove | runner:update | runner:path | runner:info | runner:unlink | runner:adopt)
+          _omacellar_runners
+          ;;
+        runner:link)
+          _files -/
+          ;;
+        runner:exec)
+          _command_names
+          ;;
+        prefix:create)
+          _arguments '--runner[runner to use]:runner:_omacellar_runners' '--arch[win64|win32|both]:arch:(win64 win32 both)' '--force[recreate from scratch]' '--yes[do not ask]'
+          ;;
+        prefix:remove | prefix:info | prefix:path | prefix:run | prefix:shell | prefix:winetricks | prefix:env)
+          _omacellar_prefixes
+          ;;
+      esac
+      case $words[$CURRENT] in
+        --runner) _omacellar_runners ;;
+        --arch) _values 'arch' win64 win32 both ;;
+      esac
+      ;;
+  esac
+}
+
+_omacellar "$@"

@@ -1,0 +1,31 @@
+post_install() {
+  cat <<'EOF'
+omacellar is installed.
+
+  omacellar runner list              what is in the cellar, what is upstream
+  omacellar runner add soda          install a runner
+  omacellar prefix create games      make an installation
+  omacellar doctor                   check the machine
+  omacellar about                    credits
+
+Everything lives in ~/.omacellar, not in ~/.local/share.
+
+Tab completion is already set up for bash, zsh and fish.
+EOF
+
+  # An older layout may still hold a cellar worth keeping.
+  if [ -d "$HOME/.local/share/omacellar/runners" ] \
+    || [ -d "$HOME/.local/share/omacellar/prefixes" ]; then
+    cat <<'EOF'
+
+There is an older cellar at ~/.local/share/omacellar.
+Bring it over when you are ready:
+
+  omacellar migrate
+EOF
+  fi
+}
+
+post_upgrade() {
+  post_install
+}

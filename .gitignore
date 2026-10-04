@@ -1,0 +1,12 @@
+# Runner builds, linked or installed locally. Several gigabytes, and everyone
+# gets their own with `omacellar runner add`.
+runners/
+
+# Recordings
+demo.gif
+demo.tape
+
+# Scratch
+*.log
+struturelook.txt
+errortext.txt

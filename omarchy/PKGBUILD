@@ -1,0 +1,37 @@
+# Maintainer: NoxTheDev
+pkgname=omacellar
+pkgver=0.1.0
+pkgrel=1
+pkgdesc="A cellar of Windows runners: install, update and juggle Wine and Proton builds from the command line"
+arch=('any')
+url="https://github.com/noxthedev/omacellar"
+license=('GPL-3.0-or-later')
+depends=('bash' 'curl' 'jq' 'tar' 'xz' 'util-linux')
+optdepends=(
+  'winetricks: install and tweak Windows runtimes and codecs'
+  'vulkan-tools: let omacellar doctor check your Vulkan setup'
+  'git: build runners from source'
+  'zstd: unpack .tar.zst runners'
+)
+source=("$pkgname-$pkgver.tar.gz")
+sha256sums=('SKIP')
+
+package() {
+  cd "$srcdir/$pkgname-$pkgver"
+
+  install -Dm755 bin/omacellar "$pkgdir/usr/bin/omacellar"
+  install -d "$pkgdir/usr/share/omacellar/lib" "$pkgdir/usr/share/omacellar/registry"
+  install -Dm644 lib/*.sh "$pkgdir/usr/share/omacellar/lib/"
+  install -Dm644 registry/runners.conf "$pkgdir/usr/share/omacellar/registry/runners.conf"
+
+  install -d "$pkgdir/usr/share/bash-completion/completions"
+  install -Dm644 completions/omacellar.bash \
+    "$pkgdir/usr/share/bash-completion/completions/omacellar"
+  install -Dm644 completions/_omacellar \
+    "$pkgdir/usr/share/zsh/site-functions/_omacellar"
+  install -Dm644 completions/omacellar.fish \
+    "$pkgdir/usr/share/fish/vendor_completions.d/omacellar.fish"
+
+  install -Dm644 LICENSE "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+  install -Dm644 README.md "$pkgdir/usr/share/doc/$pkgname/README.md"
+}
