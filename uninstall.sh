@@ -62,11 +62,19 @@ ok()   { printf '%s  removed%s %s\n' "$GREEN" "$OFF" "$*"; }
 skip() { printf '%s  absent%s  %s\n' "$DIM" "$OFF" "$*"; }
 die()  { printf 'err %s %s\n' "$RED" "$OFF" "$*" >&2; exit 1; }
 
+# When this runs as `curl ... | sudo bash`, stdin is the pipe carrying the
+# script, so it cannot also carry the answer. Go to the terminal directly, and
+# treat a machine with no terminal as a no rather than a guess.
+tty_can_prompt() {
+  ( exec 3</dev/tty ) 2>/dev/null
+}
+
 confirm() {
   [[ $ASSUME_YES == true ]] && return 0
-  [[ -t 0 ]] || return 1
+  tty_can_prompt || return 1
   local reply
-  read -r -p "$1 [y/N] " reply
+  printf '%s [y/N] ' "$1" >/dev/tty
+  read -r reply </dev/tty || reply=
   [[ $reply == [yY] || $reply == [yY][eE][sS] ]]
 }
 
